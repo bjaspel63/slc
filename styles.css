@@ -9,9 +9,15 @@
   --warn:#f59e0b;
   --softShadow: 0 12px 30px rgba(0,0,0,.12);
   --radius: 22px;
+
+  /* NEW for camera modal */
+  --overlay: rgba(15,23,42,.55);
+  --panelBorder: rgba(108,99,255,.18);
 }
 
 *{ box-sizing:border-box; }
+
+html, body{ height:100%; }
 
 body{
   margin:0;
@@ -93,7 +99,7 @@ h1{
 .btnGood{ background: linear-gradient(135deg, var(--good), #22c55e); color:white; }
 .btnWarn{ background: linear-gradient(135deg, var(--warn), #fb7185); color:white; }
 
-/* NEW: small button for camera */
+/* small button for camera */
 .btnSmall{
   border: 2px solid rgba(33,53,71,.12);
   background: rgba(255,255,255,.92);
@@ -102,7 +108,7 @@ h1{
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 8px 18px rgba(0,0,0,.08);
-  transition: transform .08s ease;
+  transition: transform .08s ease, filter .12s ease;
   white-space: nowrap;
 }
 .btnSmall:active{ transform: translateY(1px) scale(.99); }
@@ -126,7 +132,7 @@ h1{
   top: calc(100% + 10px);
   min-width: 220px;
   background: rgba(255,255,255,.95);
-  border: 2px solid rgba(108,99,255,.18);
+  border: 2px solid var(--panelBorder);
   border-radius: 18px;
   box-shadow: 0 18px 40px rgba(0,0,0,.14);
   padding: 8px;
@@ -159,7 +165,6 @@ h1{
 }
 
 .menuItem.danger:hover{ background: rgba(251,113,133,.14); }
-
 
 /* grid */
 .grid{
@@ -275,7 +280,7 @@ textarea{
   opacity:.85;
 }
 
-/* NEW: file row (input + camera button) */
+/* file row (input + camera button) */
 .fileRow{
   display:flex;
   gap:10px;
@@ -389,7 +394,7 @@ textarea{
   filter: saturate(1.2);
 }
 
-/* Images - FIX: not cropped */
+/* Images */
 .imgGrid{
   display:grid;
   grid-template-columns: 1fr;
@@ -452,13 +457,13 @@ textarea{
               linear-gradient(180deg, #fff, #f7fbff);
   z-index: 9999;
   display:none;
-  padding: 18px;
+  padding: 16px;
 }
 
 .presentWrap{
-  max-width: 980px;
+  max-width: 1100px;
   margin: 0 auto;
-  height: calc(100vh - 36px);
+  height: calc(100vh - 32px);
   display:grid;
   grid-template-rows: auto 1fr auto;
   gap: 12px;
@@ -471,57 +476,9 @@ textarea{
   gap: 10px;
 }
 
-.presentTopActions{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
 .presentTitle{
   font-weight:1000;
   font-size:18px;
-}
-
-.slide{
-  background: rgba(255,255,255,.90);
-  border-radius: 26px;
-  border: 2px solid rgba(108,99,255,.14);
-  box-shadow: var(--softShadow);
-  padding: 18px;
-  overflow:auto;
-}
-
-.slide h3{
-  margin:0 0 12px;
-  font-size: 22px;
-}
-
-.presentNav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap: 10px;
-  flex-wrap:wrap;
-}
-
-.kbd{
-  font-size: 12px;
-  color: var(--muted);
-  background: rgba(255,255,255,.8);
-  border: 1px solid rgba(33,53,71,.10);
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-weight: 900;
-}
-
-/* ===== Kid-friendly Present Mode ===== */
-.presentOverlay{
-  padding: 16px;
-}
-
-.presentWrap{
-  max-width: 1100px;
 }
 
 .slide{
@@ -549,6 +506,24 @@ textarea{
 .slideInner{
   position: relative;
   z-index: 1;
+}
+
+.presentNav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 10px;
+  flex-wrap:wrap;
+}
+
+.kbd{
+  font-size: 12px;
+  color: var(--muted);
+  background: rgba(255,255,255,.8);
+  border: 1px solid rgba(33,53,71,.10);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-weight: 900;
 }
 
 .slideTopBar{
@@ -675,19 +650,87 @@ textarea{
 
 /* ===== Teacher Mode (view-only) ===== */
 body.teacherMode .grid{
-  display:none; /* hides all editing cards */
+  display:none;
 }
-
 body.teacherMode .sub{
   opacity: .95;
 }
-
-/* Optional: hide Save + Reset in teacher mode */
 body.teacherMode #btnExportJson,
 body.teacherMode #btnReset{
   display:none;
 }
 
+/* ==========================
+   NEW: CAMERA MODAL (Webcam)
+   IDs used by JS:
+   #camOverlay #camPanel #camVideo #camCanvas #camClose #camCancel #camSnap
+========================== */
+.camOverlay{
+  position: fixed;
+  inset: 0;
+  display:none;          /* JS sets to flex */
+  align-items:center;
+  justify-content:center;
+  padding: 16px;
+  background: var(--overlay);
+  z-index: 12000;
+}
+
+.camPanel{
+  width: min(980px, 100%);
+  background: rgba(255,255,255,.95);
+  border: 2px solid var(--panelBorder);
+  border-radius: 22px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.22);
+  overflow:hidden;
+}
+
+.camTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(108,99,255,.12), rgba(0,194,255,.10));
+  border-bottom: 1px solid rgba(33,53,71,.10);
+}
+
+.camTitle{
+  font-weight: 1000;
+  letter-spacing: .2px;
+}
+
+.camBody{
+  padding: 14px;
+  display:grid;
+  gap: 12px;
+}
+
+.camVideoWrap{
+  width:100%;
+  border-radius: 18px;
+  border: 2px solid rgba(33,53,71,.10);
+  background: #fff;
+  overflow:hidden;
+  box-shadow: 0 12px 30px rgba(0,0,0,.10);
+}
+
+.camVideo{
+  width:100%;
+  height: auto;
+  display:block;
+  background:#000;
+}
+
+.camActions{
+  display:flex;
+  gap: 10px;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+}
+
+/* hide canvas (still used for capture) */
+#camCanvas{ display:none; }
 
 /* Print */
 @media print{
@@ -697,4 +740,5 @@ body.teacherMode #btnReset{
   .card{ box-shadow:none; border: 1px solid #ddd; background:white; }
   .btn, .btnSmall{ display:none !important; }
   .presentOverlay{ display:none !important; }
+  .camOverlay{ display:none !important; }
 }
