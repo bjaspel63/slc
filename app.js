@@ -168,19 +168,15 @@ function buildStarRow(subject, groupKey){
     b.textContent = "⭐";
     b.title = `${i} star${i>1?"s":""}`;
     b.addEventListener("click", () => {
-  const currentNow = Number(state.ratings[key] || 0);
-  const next = (currentNow === i) ? 0 : i; // tap same star again = clear
-  state.ratings[key] = next;
-
-  [...starBar.children].forEach((child, idx) => {
-    child.classList.toggle("on", idx < next);
-  });
-
-  saveState();
-});
-
+      state.ratings[key] = i;
+      [...starBar.children].forEach((child, idx) => {
+        child.classList.toggle("on", idx < i);
+      });
+      saveState();
+    });
     starBar.appendChild(b);
   }
+
 
   row.appendChild(name);
   row.appendChild(starBar);
