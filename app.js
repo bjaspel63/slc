@@ -668,7 +668,7 @@ function makeSlides(){
           <div class="bigCard">
             <div class="bigLine">My explanation</div>
             <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-              <b>My favorite subject is …</b><br>
+          
               ${favExplain || "<i>(No explanation yet)</i>"}
             </div>
           </div>
@@ -697,7 +697,7 @@ function makeSlides(){
           <div class="bigCard">
             <div class="bigLine">How I will improve</div>
             <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-              <b>One of the most challenging subject is …</b><br>
+              
               ${challExplain || "<i>(No explanation yet)</i>"}
             </div>
           </div>
