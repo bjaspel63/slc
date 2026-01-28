@@ -458,7 +458,6 @@ textarea{
   position: fixed;
   inset: 0;
 
-  /* ✅ match Option D vibe in present mode too */
   background:
     radial-gradient(900px 520px at 15% 15%, rgba(108,99,255,.22), transparent 60%),
     radial-gradient(900px 520px at 85% 25%, rgba(0,194,255,.22), transparent 60%),
@@ -624,7 +623,7 @@ textarea{
   padding: 10px 12px;
   border-radius: 16px;
   background: rgba(0,194,255,.12);
-  border: 1px dashed rgba(0,194,255,.45IPMSES);
+  border: 1px dashed rgba(0,194,255,.45);
   font-weight: 1000;
 }
 .chip.good{ background: rgba(20,184,166,.12); border-color: rgba(20,184,166,.45); }
