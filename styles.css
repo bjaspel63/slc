@@ -673,6 +673,22 @@ textarea{
 }
 .starsTable tr:last-child td{ border-bottom:none; }
 
+/* ===== Teacher Mode (view-only) ===== */
+body.teacherMode .grid{
+  display:none; /* hides all editing cards */
+}
+
+body.teacherMode .sub{
+  opacity: .95;
+}
+
+/* Optional: hide Save + Reset in teacher mode */
+body.teacherMode #btnExportJson,
+body.teacherMode #btnReset{
+  display:none;
+}
+
+
 /* Print */
 @media print{
   header, .actions, .hint, .footerNote { display:none !important; }
