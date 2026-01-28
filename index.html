@@ -10,34 +10,41 @@
 <body>
   <div class="wrap">
 
-    <header>
-      <div class="brand">
-        <div class="badge">🎤</div>
-        <div>
-          <h1>Student-Led Conference</h1>
-          <div class="sub">Lower Primary</div>
-        </div>
+  <header>
+  <div class="brand">
+    <div class="badge">🎤</div>
+    <div>
+      <h1>Student-Led Conference</h1>
+      <div class="sub">Lower Primary</div>
+    </div>
+  </div>
+
+  <!-- BIG kid-friendly Present button (always visible) -->
+  <div class="quickActions">
+    <button class="btn btnPrimary btnBig" id="btnPresentBig" type="button" title="Start Presentation">
+      🎬 Present
+    </button>
+
+    <!-- Keep the menu for teacher actions -->
+    <div class="menu">
+      <button class="btn btnGhost menuBtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" title="Menu">
+        ☰ Menu
+      </button>
+
+      <div class="menuPanel" id="menuPanel" role="menu" aria-hidden="true">
+        <button class="menuItem" id="btnPresent" role="menuitem">🎬 Present</button>
+        <button class="menuItem" id="btnImportJson" role="menuitem">⬆️ Open</button>
+        <button class="menuItem" id="btnExportJson" role="menuitem">⬇️ Save</button>
+        <button class="menuItem" id="btnPrint" role="menuitem">🖨️ Print</button>
+        <div class="menuDivider"></div>
+        <button class="menuItem danger" id="btnReset" role="menuitem">🧼 Reset</button>
       </div>
 
-      <!-- ✅ NEW: Menu (replaces cramped buttons) -->
-      <div class="menu">
-        <button class="btn btnGhost menuBtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" title="Menu">
-          ☰ Menu
-        </button>
+      <input id="importJsonFile" type="file" accept="application/json" style="display:none" />
+    </div>
+  </div>
+</header>
 
-        <div class="menuPanel" id="menuPanel" role="menu" aria-hidden="true">
-          <button class="menuItem" id="btnPresent" role="menuitem">🎬 Present</button>
-          <button class="menuItem" id="btnImportJson" role="menuitem">⬆️ Open</button>
-          <button class="menuItem" id="btnExportJson" role="menuitem">⬇️ Save</button>
-          <button class="menuItem" id="btnPrint" role="menuitem">🖨️ Print</button>
-          <div class="menuDivider"></div>
-          <button class="menuItem danger" id="btnReset" role="menuitem">🧼 Reset</button>
-        </div>
-
-        <!-- hidden input for import -->
-        <input id="importJsonFile" type="file" accept="application/json" style="display:none" />
-      </div>
-    </header>
 
     <div class="grid">
       <!-- Step 1 -->
