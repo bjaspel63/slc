@@ -432,15 +432,6 @@ function applyStateToUI(){
 --------------------------- */
 function bindInputs(){
 
-  // Big Present button (kid-friendly)
-const big = $("btnPresentBig");
-if(big){
-  big.addEventListener("click", () => {
-    closeMenu();
-    openPresent();
-  });
-}
-
   // Student
   $("studentName").value = state.studentName;
   $("studentName").addEventListener("input", e => {
@@ -759,7 +750,7 @@ function makeSlides(){
     }.`;
 
   const challAuto =
-    `One of the most challenging subjects is ${state.challenge1 || "…"}${
+    `One of the most challenging subject is ${state.challenge1 || "…"}${
       state.challenge2 ? ` and another challenging subject is ${state.challenge2}` : ""
     }.`;
 
@@ -776,93 +767,92 @@ function makeSlides(){
     </tr>`).join("");
 
   return [
+    // ✅ SLIDE 1 (stacked: Presenter above, Today I will talk about below)
     {
       title: "👋 Hello!",
       body: `
-        <div class="slideGrid two">
-          <div class="bigCard" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
-            ${photoHTML}
-            <div style="min-width:220px;flex:1;">
-              <div style="color:#5b6b7a;font-weight:1000;">Presenter</div>
-              <div style="font-size:42px;font-weight:1000;letter-spacing:.2px;line-height:1.1;">${name}</div>
-              ${section ? `<div style="margin-top:6px;color:#5b6b7a;font-weight:1000;font-size:18px;">Section: ${section}</div>` : ""}
+        <div class="bigCard" style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;">
+          ${photoHTML}
+          <div style="min-width:220px;flex:1;">
+            <div style="color:#5b6b7a;font-weight:1000;">Presenter</div>
+            <div style="font-size:42px;font-weight:1000;letter-spacing:.2px;line-height:1.1;">${name}</div>
+            ${section ? `<div style="margin-top:6px;color:#5b6b7a;font-weight:1000;font-size:18px;">Section: ${section}</div>` : ""}
 
-              <div class="chips">
-                <span class="chip">🎤 I can speak clearly</span>
-                <span class="chip good">🌟 I will share my learning</span>
-              </div>
+            <div class="chips">
+              <span class="chip">🎤 I can speak clearly</span>
+              <span class="chip good">🌟 I will share my learning</span>
             </div>
           </div>
+        </div>
 
-          <div class="bigCard">
-            <div class="bigLine">🚀 Today I will talk about…</div>
-            <div class="chips">
-              <span class="chip">🌟 Favorites</span>
-              <span class="chip warn">🧩 Challenges</span>
-              <span class="chip good">⭐ My Stars</span>
-              <span class="chip">💬 Comments</span>
-            </div>
-            <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
-              (Tip: Use ⬅ ➡ keys to move slides)
-            </div>
+        <div class="bigCard" style="margin-top:14px;">
+          <div class="bigLine">🚀 Today I will talk about…</div>
+          <div class="chips">
+            <span class="chip">🌟 Favorites</span>
+            <span class="chip warn">🧩 Challenges</span>
+            <span class="chip good">⭐ My Stars</span>
+            <span class="chip">💬 Comments</span>
+          </div>
+          <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
+            (Tip: Use ⬅ ➡ keys to move slides)
           </div>
         </div>
       `
     },
+
+    // ✅ SLIDE 2 (stacked: My picks above, My explanation below)
     {
       title: "🌟 My Favorite Subjects",
       body: `
         <div class="bigCard">
-          <div class="bigLine">✨ ${safeText(favAuto)}</div>
-        </div>
-
-        <div class="slideGrid two" style="margin-top:14px;">
-          <div class="bigCard">
-            <div class="bigLine">My picks</div>
-            <div class="chips">
-              <span class="chip good">📘 Core: ${favCore}</span>
-              <span class="chip">🎨 Co-core: ${favCo}</span>
-              <span class="chip warn">🎯 Activity: ${favAct}</span>
-            </div>
+          <div class="bigLine">My picks</div>
+          <div class="chips" style="margin-top:10px;">
+            <span class="chip good">📘 Core: ${favCore}</span>
+            <span class="chip">🎨 Co-core: ${favCo}</span>
+            <span class="chip warn">🎯 Activity: ${favAct}</span>
           </div>
 
-          <div class="bigCard">
-            <div class="bigLine">My explanation</div>
-            <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-              ${favExplain || "<i>(No explanation yet)</i>"}
-            </div>
+          <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
+            ✨ ${safeText(favAuto)}
+          </div>
+        </div>
+
+        <div class="bigCard" style="margin-top:14px;">
+          <div class="bigLine">My explanation</div>
+          <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
+            ${favExplain || "<i>(No explanation yet)</i>"}
           </div>
         </div>
       `
     },
+
+    // ✅ SLIDE 3 (stacked: My challenges above, How I will improve below)
     {
       title: "🧩 Challenging Subjects",
       body: `
         <div class="bigCard">
-          <div class="bigLine">💪 ${safeText(challAuto)}</div>
-        </div>
-
-        <div class="slideGrid two" style="margin-top:14px;">
-          <div class="bigCard">
-            <div class="bigLine">My challenges</div>
-            <div class="chips">
-              <span class="chip warn">1️⃣ ${chall1}</span>
-              <span class="chip warn">2️⃣ ${chall2}</span>
-            </div>
-            <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
-              It’s okay to find something hard — that’s how we grow!
-            </div>
+          <div class="bigLine">My challenges</div>
+          <div class="chips" style="margin-top:10px;">
+            <span class="chip warn">1️⃣ ${chall1}</span>
+            <span class="chip warn">2️⃣ ${chall2}</span>
           </div>
 
-          <div class="bigCard">
-            <div class="bigLine">How I will improve</div>
-            <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-              ${challExplain || "<i>(No explanation yet)</i>"}
-            </div>
+          <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
+            💪 ${safeText(challAuto)}<br/>
+            It’s okay to find something hard — that’s how we grow!
+          </div>
+        </div>
+
+        <div class="bigCard" style="margin-top:14px;">
+          <div class="bigLine">How I will improve</div>
+          <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
+            ${challExplain || "<i>(No explanation yet)</i>"}
           </div>
         </div>
       `
     },
+
+    // ✅ SLIDE 4 (unchanged)
     {
       title: "⭐ My Subject Stars",
       body: `
@@ -892,6 +882,8 @@ function makeSlides(){
         </div>
       `
     },
+
+    // ✅ SLIDE 5 (unchanged)
     {
       title: "🖼️ Favorite Subject Images",
       body: `
@@ -907,6 +899,8 @@ function makeSlides(){
         </div>
       `
     },
+
+    // ✅ SLIDE 6 (unchanged)
     {
       title: "💬 Comments",
       body: `
@@ -929,6 +923,7 @@ function makeSlides(){
     }
   ];
 }
+
 
 function renderSlide(){
   const slides = makeSlides();
