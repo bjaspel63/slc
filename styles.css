@@ -30,6 +30,8 @@ body{
     radial-gradient(900px 520px at 85% 25%, rgba(0,194,255,.22), transparent 60%),
     radial-gradient(900px 520px at 40% 90%, rgba(20,184,166,.18), transparent 60%),
     linear-gradient(180deg, #fff, #f7fbff);
+   background-repeat: no-repeat;
+   background-attachment: fixed;
 
   min-height:100vh;
 }
