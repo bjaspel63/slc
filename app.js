@@ -46,6 +46,7 @@ async function copyToClipboard(text){
 --------------------------- */
 const defaultState = {
   studentName: "",
+  studentSection: "",
   studentPhoto: "",
 
   favCore: "",
@@ -216,8 +217,14 @@ function updateSentences(){
 
 function updatePresentName(){
   const n = state.studentName?.trim();
-  $("presentName").textContent = n ? `Presenter: ${n}` : "Student-Led Conference";
+  const sec = state.studentSection?.trim();
+
+  if(n && sec) $("presentName").textContent = `Presenter: ${n} • ${sec}`;
+  else if(n) $("presentName").textContent = `Presenter: ${n}`;
+  else if(sec) $("presentName").textContent = `Student-Led Conference • ${sec}`;
+  else $("presentName").textContent = "Student-Led Conference";
 }
+
 
 /* --------------------------
    Challenge dropdown rule
@@ -302,6 +309,7 @@ function setFavImage(which, base64, skipSave=false){
 --------------------------- */
 function applyStateToUI(){
   $("studentName").value = state.studentName || "";
+  $("studentSection").value = state.studentSection || "";
   $("favActivity").value = state.favActivity || "";
   $("favExplanation").value = state.favExplanation || "";
   $("challengeExplanation").value = state.challengeExplanation || "";
@@ -338,6 +346,12 @@ function bindInputs(){
     state.studentName = e.target.value;
     saveState();
   });
+
+    $("studentSection").value = state.studentSection || "";
+    $("studentSection").addEventListener("input", e => {
+    state.studentSection = e.target.value;
+    saveState();
+    });
 
   setAvatar(state.studentPhoto);
 
@@ -546,6 +560,7 @@ function starsTextFor(subject, groupKey){
 
 function makeSlides(){
   const name = safeText(state.studentName?.trim() || "Student");
+  const section = safeText(state.studentSection?.trim() || "");
 
   const favCore = safeText(state.favCore || "—");
   const favCo = safeText(state.favCoCore || "—");
@@ -609,6 +624,8 @@ function makeSlides(){
             <div style="min-width:220px;flex:1;">
               <div style="color:#5b6b7a;font-weight:1000;">Presenter</div>
               <div style="font-size:42px;font-weight:1000;letter-spacing:.2px;line-height:1.1;">${name}</div>
+              ${section ? `<div style="margin-top:6px;color:#5b6b7a;font-weight:1000;font-size:18px;">Section: ${section}</div>` : ""}
+
               <div class="chips">
                 <span class="chip">🎤 I can speak clearly</span>
                 <span class="chip good">🌟 I will share my learning</span>
