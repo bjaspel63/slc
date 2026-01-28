@@ -129,9 +129,20 @@
           </div>
 
           <div>
-            <label for="favActivity">Favorite Activity</label>
-            <input id="favActivity" type="text" placeholder="Example: Reading time, Lego, Football..." />
-          </div>
+  <label for="favActivity">Favorite Activity</label>
+
+  <div class="pickChips" id="activityChips" aria-label="Tap to choose an activity">
+    <button class="pickChip" type="button" data-value="Reading">📚 Reading</button>
+    <button class="pickChip" type="button" data-value="Lego">🧱 Lego</button>
+    <button class="pickChip" type="button" data-value="Drawing">🎨 Drawing</button>
+    <button class="pickChip" type="button" data-value="Football">⚽ Football</button>
+    <button class="pickChip" type="button" data-value="Coding">💻 Coding</button>
+    <button class="pickChip" type="button" data-value="Music">🎵 Music</button>
+  </div>
+
+  <input id="favActivity" type="text" placeholder="Or type your own..." />
+</div>
+
         </div>
 
         <label for="favExplanation">Explain (starts with “My favorite subject is …”)</label>
