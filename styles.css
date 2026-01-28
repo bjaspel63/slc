@@ -23,9 +23,13 @@ body{
   margin:0;
   font-family: ui-rounded, "Comic Sans MS", "Trebuchet MS", system-ui, -apple-system, Segoe UI, Arial;
   color:var(--ink);
-  background: radial-gradient(1200px 600px at 10% 10%, var(--bg1), transparent 60%),
-              radial-gradient(1200px 600px at 90% 20%, var(--bg2), transparent 60%),
-              linear-gradient(180deg, #fff, #f7fbff);
+
+  background:
+    radial-gradient(900px 520px at 15% 15%, rgba(108,99,255,.22), transparent 60%),
+    radial-gradient(900px 520px at 85% 25%, rgba(0,194,255,.22), transparent 60%),
+    radial-gradient(900px 520px at 40% 90%, rgba(20,184,166,.18), transparent 60%),
+    linear-gradient(180deg, #fff, #f7fbff);
+
   min-height:100vh;
 }
 
