@@ -792,9 +792,7 @@ function makeSlides(){
             <span class="chip good">⭐ My Stars</span>
             <span class="chip">💬 Comments</span>
           </div>
-          <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
-            (Tip: Use ⬅ ➡ keys to move slides)
-          </div>
+         
         </div>
       `
     },
