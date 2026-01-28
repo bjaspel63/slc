@@ -333,7 +333,7 @@ async function openCamera(target){
     await video.play();
   }catch(err){
     console.error(err);
-    alert("Camera not available. Allow camera permission (🔒 lock icon) and use HTTPS (Netlify) or localhost.");
+    alert("Camera not available. Allow camera permission (🔒 lock icon) and use HTTPS or localhost.");
     closeCamera();
   }
 }
