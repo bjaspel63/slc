@@ -120,6 +120,7 @@ function exportToJSON(){
 
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
   downloadBlob(filename, blob);
+  showToast("⬇️ Saved!");
 }
 
 async function importFromJSONFile(file){
@@ -652,14 +653,14 @@ function bindButtons(){
     const f = e.target.files?.[0];
     if(f) await importFromJSONFile(f);
     e.target.value = "";
-    showToast("⬆️ Opened!");
+ 
   });
 
   // 3 Export JSON
   $("btnExportJson").addEventListener("click", () => {
     closeMenu();
     exportToJSON();
-    showToast("⬇️ Saved!");
+    
   });
 
   // 4 Print
