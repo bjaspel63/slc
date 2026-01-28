@@ -1,4 +1,4 @@
-const SUBJECTS_CORE = ["English","Math","Science","Chinese", "Thai"];
+const SUBJECTS_CORE = ["English","Math","Science","Chinese","Thai"];
 const SUBJECTS_COCORE = ["Drama","Art","ICT","Social Studies","Music","PE"];
 
 const $ = (id) => document.getElementById(id);
@@ -113,7 +113,6 @@ function exportToJSON(){
   downloadBlob(filename, blob);
 }
 
-
 async function importFromJSONFile(file){
   const text = await file.text();
   let payload;
@@ -211,8 +210,10 @@ function updateSentences(){
 
   const c1 = state.challenge1 || "…";
   const c2 = state.challenge2 ? ` and another challenging subject is ${state.challenge2}` : "";
-  $("challengeSentence").textContent =
-    `One of the most challenging subject is ${c1}${c2}.`;
+
+  // Grammar fix: subject -> subjects (when 2), and "subjects are" when plural
+  const base = c2 ? "One of the most challenging subjects is" : "One of the most challenging subjects is";
+  $("challengeSentence").textContent = `${base} ${c1}${c2}.`;
 }
 
 function updatePresentName(){
@@ -224,7 +225,6 @@ function updatePresentName(){
   else if(sec) $("presentName").textContent = `Student-Led Conference • ${sec}`;
   else $("presentName").textContent = "Student-Led Conference";
 }
-
 
 /* --------------------------
    Challenge dropdown rule
@@ -305,6 +305,83 @@ function setFavImage(which, base64, skipSave=false){
 }
 
 /* --------------------------
+   Chromebook Webcam Camera Modal
+   Uses getUserMedia and your HTML IDs:
+   camOverlay, camVideo, camCanvas, camClose, camCancel, camSnap
+--------------------------- */
+let camStream = null;
+let camTarget = null; // "student" | "core" | "cocore"
+
+async function openCamera(target){
+  camTarget = target;
+
+  const overlay = $("camOverlay");
+  const video = $("camVideo");
+
+  overlay.style.display = "flex";
+  overlay.setAttribute("aria-hidden","false");
+
+  try{
+    const facingMode = (target === "student") ? "user" : "environment";
+
+    camStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode },
+      audio: false
+    });
+
+    video.srcObject = camStream;
+    await video.play();
+  }catch(err){
+    console.error(err);
+    alert("Camera not available. Allow camera permission (🔒 lock icon) and use HTTPS (Netlify) or localhost.");
+    closeCamera();
+  }
+}
+
+function closeCamera(){
+  const overlay = $("camOverlay");
+  const video = $("camVideo");
+
+  overlay.style.display = "none";
+  overlay.setAttribute("aria-hidden","true");
+
+  if(video) video.srcObject = null;
+
+  if(camStream){
+    camStream.getTracks().forEach(t => t.stop());
+    camStream = null;
+  }
+  camTarget = null;
+}
+
+function snapCameraPhoto(){
+  const video = $("camVideo");
+  const canvas = $("camCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const w = video.videoWidth || 640;
+  const h = video.videoHeight || 480;
+
+  canvas.width = w;
+  canvas.height = h;
+  ctx.drawImage(video, 0, 0, w, h);
+
+  const base64 = canvas.toDataURL("image/jpeg", 0.92);
+
+  if(camTarget === "student"){
+    state.studentPhoto = base64;
+    setAvatar(base64);
+    saveState();
+  }else if(camTarget === "core"){
+    setFavImage("core", base64);
+  }else if(camTarget === "cocore"){
+    setFavImage("cocore", base64);
+  }
+
+  closeCamera();
+}
+
+/* --------------------------
    Apply state to UI (used by import)
 --------------------------- */
 function applyStateToUI(){
@@ -347,11 +424,11 @@ function bindInputs(){
     saveState();
   });
 
-    $("studentSection").value = state.studentSection || "";
-    $("studentSection").addEventListener("input", e => {
+  $("studentSection").value = state.studentSection || "";
+  $("studentSection").addEventListener("input", e => {
     state.studentSection = e.target.value;
     saveState();
-    });
+  });
 
   setAvatar(state.studentPhoto);
 
@@ -367,12 +444,16 @@ function bindInputs(){
     e.target.value = "";
   });
 
-  // camera
-  $("btnStudentCam").addEventListener("click", () => $("studentPhotoCam").click());
-  $("studentPhotoCam").addEventListener("change", async (e) => {
-    await handleStudentPhotoFile(e.target.files?.[0]);
-    e.target.value = "";
-  });
+  // ✅ Chromebook webcam camera
+  $("btnStudentCam").addEventListener("click", () => openCamera("student"));
+
+  // (Optional fallback input for some mobile devices)
+  if($("studentPhotoCam")){
+    $("studentPhotoCam").addEventListener("change", async (e) => {
+      await handleStudentPhotoFile(e.target.files?.[0]);
+      e.target.value = "";
+    });
+  }
 
   // Favorites
   $("favCore").value = state.favCore;
@@ -435,18 +516,23 @@ function bindInputs(){
     e.target.value = "";
   });
 
-  // camera for fav images
-  $("btnCoreCam").addEventListener("click", () => $("imgCoreCam").click());
-  $("imgCoreCam").addEventListener("change", async (e)=>{
-    await handleFavImage("core", e.target.files?.[0]);
-    e.target.value = "";
-  });
+  // ✅ Chromebook webcam camera for favorite images
+  $("btnCoreCam").addEventListener("click", () => openCamera("core"));
+  $("btnCoCoreCam").addEventListener("click", () => openCamera("cocore"));
 
-  $("btnCoCoreCam").addEventListener("click", () => $("imgCoCoreCam").click());
-  $("imgCoCoreCam").addEventListener("change", async (e)=>{
-    await handleFavImage("cocore", e.target.files?.[0]);
-    e.target.value = "";
-  });
+  // (Optional fallback inputs for some mobile devices)
+  if($("imgCoreCam")){
+    $("imgCoreCam").addEventListener("change", async (e)=>{
+      await handleFavImage("core", e.target.files?.[0]);
+      e.target.value = "";
+    });
+  }
+  if($("imgCoCoreCam")){
+    $("imgCoCoreCam").addEventListener("change", async (e)=>{
+      await handleFavImage("cocore", e.target.files?.[0]);
+      e.target.value = "";
+    });
+  }
 
   // Comments
   $("comments").value = state.comments;
@@ -548,6 +634,30 @@ function bindButtons(){
 }
 
 /* --------------------------
+   Camera modal bindings
+--------------------------- */
+function bindCameraModal(){
+  // Close buttons
+  $("camClose").addEventListener("click", closeCamera);
+  $("camCancel").addEventListener("click", closeCamera);
+  $("camSnap").addEventListener("click", snapCameraPhoto);
+
+  // Click background to close
+  $("camOverlay").addEventListener("click", (e)=>{
+    if(e.target && e.target.id === "camOverlay") closeCamera();
+  });
+
+  // Esc closes camera first (when open)
+  document.addEventListener("keydown", (e)=>{
+    const open = $("camOverlay")?.style.display === "flex";
+    if(open && e.key === "Escape"){
+      e.preventDefault();
+      closeCamera();
+    }
+  });
+}
+
+/* --------------------------
    Presentation Slides
 --------------------------- */
 let slideIndex = 0;
@@ -577,7 +687,6 @@ function makeSlides(){
     ? `<div class="photoFrame"><img src="${state.studentPhoto}" alt="Student photo"></div>`
     : `<div class="photoFrame" style="font-size:68px;">🧒</div>`;
 
-  // NOTE: images now use contain to avoid ugly cropping
   const favCoreImg = state.imgCore
     ? `<div class="bigCard"><div class="bigLine">📘 Core Image</div>
         <img src="${state.imgCore}" alt="Favorite core" style="width:100%;height:260px;object-fit:contain;border-radius:18px;border:2px solid rgba(33,53,71,.10);background:#fff;margin-top:10px;">
@@ -598,7 +707,7 @@ function makeSlides(){
     }.`;
 
   const challAuto =
-    `One of the most challenging subject is ${state.challenge1 || "…"}${
+    `One of the most challenging subjects is ${state.challenge1 || "…"}${
       state.challenge2 ? ` and another challenging subject is ${state.challenge2}` : ""
     }.`;
 
@@ -668,7 +777,6 @@ function makeSlides(){
           <div class="bigCard">
             <div class="bigLine">My explanation</div>
             <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-          
               ${favExplain || "<i>(No explanation yet)</i>"}
             </div>
           </div>
@@ -697,7 +805,6 @@ function makeSlides(){
           <div class="bigCard">
             <div class="bigLine">How I will improve</div>
             <div style="margin-top:10px;color:#5b6b7a;font-weight:900;line-height:1.5;">
-              
               ${challExplain || "<i>(No explanation yet)</i>"}
             </div>
           </div>
@@ -771,7 +878,6 @@ function makeSlides(){
   ];
 }
 
-
 function renderSlide(){
   const slides = makeSlides();
   slideIndex = Math.max(0, Math.min(slideIndex, slides.length - 1));
@@ -795,7 +901,6 @@ function renderSlide(){
   `;
 }
 
-
 function openPresent(){
   $("presentOverlay").style.display = "block";
   $("presentOverlay").setAttribute("aria-hidden","false");
@@ -814,10 +919,8 @@ function closePresent(){
   }
 }
 
-
-
 /* --------------------------
-   Presentation bindings (UPDATED: no share button here)
+   Presentation bindings
 --------------------------- */
 function bindPresentation(){
   $("btnExitPresent").addEventListener("click", closePresent);
@@ -835,14 +938,89 @@ function bindPresentation(){
 }
 
 /* --------------------------
-   Init (UPDATED)
+   MENU
+--------------------------- */
+function openMenu(){
+  $("menuPanel").classList.add("open");
+  $("menuBtn").setAttribute("aria-expanded","true");
+  $("menuPanel").setAttribute("aria-hidden","false");
+}
+function closeMenu(){
+  $("menuPanel").classList.remove("open");
+  $("menuBtn").setAttribute("aria-expanded","false");
+  $("menuPanel").setAttribute("aria-hidden","true");
+}
+function toggleMenu(){
+  const isOpen = $("menuPanel").classList.contains("open");
+  isOpen ? closeMenu() : openMenu();
+}
+
+function bindMenu(){
+  $("menuBtn").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    toggleMenu();
+  });
+
+  document.addEventListener("click", () => closeMenu());
+
+  document.addEventListener("keydown", (e)=>{
+    if(e.key === "Escape" && $("menuPanel").classList.contains("open")){
+      closeMenu();
+    }
+  });
+
+  $("menuPanel").addEventListener("click", (e)=> e.stopPropagation());
+}
+
+/* --------------------------
+   Buttons (menu order)
+--------------------------- */
+function bindButtons(){
+  $("btnPresent").addEventListener("click", () => {
+    closeMenu();
+    openPresent();
+  });
+
+  $("btnImportJson").addEventListener("click", () => {
+    closeMenu();
+    $("importJsonFile").click();
+  });
+
+  $("importJsonFile").addEventListener("change", async (e) => {
+    const f = e.target.files?.[0];
+    if(f) await importFromJSONFile(f);
+    e.target.value = "";
+  });
+
+  $("btnExportJson").addEventListener("click", () => {
+    closeMenu();
+    exportToJSON();
+  });
+
+  $("btnPrint").addEventListener("click", () => {
+    closeMenu();
+    window.print();
+  });
+
+  $("btnReset").addEventListener("click", () => {
+    closeMenu();
+    if(!confirm("Reset everything? This will clear all saved data on this device.")) return;
+    localStorage.removeItem("slc_state_v1");
+    state = structuredClone(defaultState);
+    location.reload();
+  });
+}
+
+/* --------------------------
+   Init
 --------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   renderSubjects();
   bindInputs();
-  bindMenu();       // ✅ NEW
-  bindButtons();    // ✅ menu order buttons
+  bindMenu();
+  bindButtons();
   bindPresentation();
+  bindCameraModal();   // ✅ NEW (webcam modal)
   updateSentences();
   updateAverages();
   updatePresentName();
