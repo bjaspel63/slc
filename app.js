@@ -652,12 +652,14 @@ function bindButtons(){
     const f = e.target.files?.[0];
     if(f) await importFromJSONFile(f);
     e.target.value = "";
+    showToast("⬆️ Opened!");
   });
 
   // 3 Export JSON
   $("btnExportJson").addEventListener("click", () => {
     closeMenu();
     exportToJSON();
+    showToast("⬇️ Saved!");
   });
 
   // 4 Print
