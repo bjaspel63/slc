@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student-Led Conference</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div class="wrap">
+
+    <header>
+      <div class="brand">
+        <div class="badge">🎤</div>
+        <div>
+          <h1>Student-Led Conference</h1>
+          <div class="sub">Build your presentation • Add stars • Print • Present</div>
+        </div>
+      </div>
+
+      <!-- ✅ NEW: Menu (replaces cramped buttons) -->
+      <div class="menu">
+        <button class="btn btnGhost menuBtn" id="menuBtn" aria-haspopup="true" aria-expanded="false" title="Menu">
+          ☰ Menu
+        </button>
+
+        <div class="menuPanel" id="menuPanel" role="menu" aria-hidden="true">
+          <button class="menuItem" id="btnPresent" role="menuitem">🎬 Present</button>
+          <button class="menuItem" id="btnImportJson" role="menuitem">⬆️ Open</button>
+          <button class="menuItem" id="btnExportJson" role="menuitem">⬇️ Save</button>
+          <button class="menuItem" id="btnPrint" role="menuitem">🖨️ Print</button>
+          <div class="menuDivider"></div>
+          <button class="menuItem danger" id="btnReset" role="menuitem">🧼 Reset</button>
+        </div>
+
+        <!-- hidden input for import -->
+        <input id="importJsonFile" type="file" accept="application/json" style="display:none" />
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Step 1 -->
+      <div class="card info">
+        <h2>👤 Student Info <span class="pill">Step 1</span></h2>
+
+        <div class="photoBox">
+          <div class="avatar" id="avatar">
+            <span class="emoji">🧒</span>
+            <img id="studentPhotoPreview" alt="Student photo preview" />
+          </div>
+
+          <div class="photoFields">
+            <label for="studentName">Student Name</label>
+            <input id="studentName" type="text" placeholder="Type your name..." />
+
+            <label>Student Photo</label>
+            <div class="fileRow">
+              <input id="studentPhoto" type="file" accept="image/*" />
+              <button class="btnSmall" id="btnStudentCam" type="button" title="Use camera">📷 Camera</button>
+            </div>
+
+            <input id="studentPhotoCam" type="file" accept="image/*" capture="user" style="display:none" />
+            <div class="sectionNote">Tip: You can upload OR use the camera (if your device supports it).</div>
+          </div>
+        </div>
+
+        <div class="hint">
+          ⭐ Give stars for each subject (1–5).<br />
+          🖼️ Add images for your favorite subjects.<br />
+          🎬 Use <b>Present</b> to show slides to teachers & parents!
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card favorites">
+        <h2>🌟 My Favorite Subjects <span class="pill">Step 2</span></h2>
+
+        <div class="row three">
+          <div>
+            <label for="favCore">Core Favorite</label>
+            <select id="favCore">
+              <option value="">Choose…</option>
+              <option>English</option>
+              <option>Math</option>
+              <option>Science</option>
+              <option>Chinese</option>
+              <option>Thai</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="favCoCore">Co-core Favorite</label>
+            <select id="favCoCore">
+              <option value="">Choose…</option>
+              <option>Drama</option>
+              <option>Art</option>
+              <option>ICT</option>
+              <option>Social Studies</option>
+              <option>Music</option>
+              <option>PE</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="favActivity">Favorite Activity</label>
+            <input id="favActivity" type="text" placeholder="Example: Reading time, Lego, Football..." />
+          </div>
+        </div>
+
+        <label for="favExplanation">Explain (starts with “My favorite subject is …”)</label>
+        <textarea id="favExplanation" placeholder="Why do you like it? What do you enjoy?"></textarea>
+
+        <div class="autoSentence" id="favSentence">
+          My favorite subject is … (choose favorites to generate this sentence)
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card challenges">
+        <h2>🧩 Challenging Subjects <span class="pill">Step 3</span></h2>
+
+        <div class="row two">
+          <div>
+            <label for="challenge1">Subject 1</label>
+            <select id="challenge1">
+              <option value="">Choose…</option>
+              <option>English</option><option>Math</option><option>Science</option><option>Chinese</option><option>Thai</option>
+              <option>Drama</option><option>Art</option><option>ICT</option><option>Social Studies</option>
+              <option>Music</option><option>PE</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="challenge2">Subject 2</label>
+            <select id="challenge2">
+              <option value="">Choose…</option>
+              <option>English</option><option>Math</option><option>Science</option><option>Chinese</option><option>Thai</option>
+              <option>Drama</option><option>Art</option><option>ICT</option><option>Social Studies</option>
+              <option>Music</option><option>PE</option>
+            </select>
+          </div>
+        </div>
+
+        <label for="challengeExplanation">Explain + how you will improve (starts with “One of the most challenging subject is …”)</label>
+        <textarea id="challengeExplanation" placeholder="Example: I will practice 10 minutes every day. I will ask questions when I’m confused."></textarea>
+
+        <div class="autoSentence warn" id="challengeSentence">
+          One of the most challenging subject is … (choose challenging subjects to generate this sentence)
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="card stars">
+        <h2>⭐ Subject Star Ratings <span class="pill">Step 4</span></h2>
+        <div class="sectionNote">Tap stars to rate each subject. 1 = “Needs more practice” • 5 = “I’m confident!”</div>
+
+        <div class="row two">
+          <div class="subjectGroup" id="groupCore">
+            <div class="groupTitle">
+              <b>📘 Core Subjects</b>
+              <span class="avg" id="avgCore">Average: —</span>
+            </div>
+            <div id="coreList"></div>
+          </div>
+
+          <div class="subjectGroup" id="groupCoCore">
+            <div class="groupTitle">
+              <b>🎨 Co-core Subjects</b>
+              <span class="avg" id="avgCoCore">Average: —</span>
+            </div>
+            <div id="cocoreList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="card images">
+        <h2>🖼️ Favorite Subject Images <span class="pill">Step 5</span></h2>
+        <div class="sectionNote">Upload OR use the camera for your favorite images.</div>
+
+        <div class="imgGrid">
+          <div class="imgCard">
+            <b>Favorite Core Image</b>
+            <div class="imgPreview" id="imgPrevCore">
+              <div class="ph">Upload an image for your favorite core subject</div>
+              <img id="imgCoreTag" alt="Favorite core subject image" />
+            </div>
+            <div class="fileRow">
+              <input id="imgCore" type="file" accept="image/*" />
+              <button class="btnSmall" id="btnCoreCam" type="button">📷 Camera</button>
+            </div>
+            <input id="imgCoreCam" type="file" accept="image/*" capture="environment" style="display:none" />
+          </div>
+
+          <div class="imgCard">
+            <b>Favorite Co-core Image</b>
+            <div class="imgPreview" id="imgPrevCoCore">
+              <div class="ph">Upload an image for your favorite co-core subject</div>
+              <img id="imgCoCoreTag" alt="Favorite co-core subject image" />
+            </div>
+            <div class="fileRow">
+              <input id="imgCoCore" type="file" accept="image/*" />
+              <button class="btnSmall" id="btnCoCoreCam" type="button">📷 Camera</button>
+            </div>
+            <input id="imgCoCoreCam" type="file" accept="image/*" capture="environment" style="display:none" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="card comments">
+        <h2>💬 Comments <span class="pill">Step 6</span></h2>
+        <label for="comments">Any comments you want to share?</label>
+        <textarea id="comments" placeholder="Example: I’m proud that I improved my reading. I want to practice math facts more."></textarea>
+        <div class="footerNote">Auto-saves on this device. Works offline after you open it once.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRESENT MODE OVERLAY (✅ removed Share button inside) -->
+  <div class="presentOverlay" id="presentOverlay" aria-hidden="true">
+    <div class="presentWrap">
+      <div class="presentTop">
+        <div class="brand">
+          <div class="badge">🎬</div>
+          <div>
+            <div class="presentTitle">Presentation Mode</div>
+            <div class="sub" id="presentName">Student-Led Conference</div>
+          </div>
+        </div>
+
+        <button class="btn btnWarn" id="btnExitPresent">✖ Exit</button>
+      </div>
+
+      <div class="slide" id="slideBox"></div>
+
+      <div class="presentNav">
+        <button class="btn btnGhost" id="btnPrev">⬅ Previous</button>
+        <div class="kbd">Keyboard: ⬅ ➡ • ESC to exit</div>
+        <button class="btn btnPrimary" id="btnNext">Next ➡</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
