@@ -767,7 +767,7 @@ function makeSlides(){
     </tr>`).join("");
 
   return [
-    // ✅ SLIDE 1 (stacked: Presenter above, Today I will talk about below)
+    
     {
       title: "👋 Hello!",
       body: `
@@ -800,20 +800,19 @@ function makeSlides(){
       `
     },
 
-    // ✅ SLIDE 2 (stacked: My picks above, My explanation below)
     {
       title: "🌟 My Favorite Subjects",
       body: `
         <div class="bigCard">
+          <div class="bigLine">✨ ${safeText(favAuto)}</div>
+        </div>
+
+        <div class="bigCard" style="margin-top:14px;">
           <div class="bigLine">My picks</div>
           <div class="chips" style="margin-top:10px;">
             <span class="chip good">📘 Core: ${favCore}</span>
             <span class="chip">🎨 Co-core: ${favCo}</span>
             <span class="chip warn">🎯 Activity: ${favAct}</span>
-          </div>
-
-          <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
-            ✨ ${safeText(favAuto)}
           </div>
         </div>
 
@@ -826,11 +825,15 @@ function makeSlides(){
       `
     },
 
-    // ✅ SLIDE 3 (stacked: My challenges above, How I will improve below)
+    // ✅ SLIDE 3: Big sentence, then My challenges, then How I will improve
     {
       title: "🧩 Challenging Subjects",
       body: `
         <div class="bigCard">
+          <div class="bigLine">💪 ${safeText(challAuto)}</div>
+        </div>
+
+        <div class="bigCard" style="margin-top:14px;">
           <div class="bigLine">My challenges</div>
           <div class="chips" style="margin-top:10px;">
             <span class="chip warn">1️⃣ ${chall1}</span>
@@ -838,7 +841,6 @@ function makeSlides(){
           </div>
 
           <div style="margin-top:12px;color:#5b6b7a;font-weight:900;">
-            💪 ${safeText(challAuto)}<br/>
             It’s okay to find something hard — that’s how we grow!
           </div>
         </div>
@@ -852,7 +854,7 @@ function makeSlides(){
       `
     },
 
-    // ✅ SLIDE 4 (unchanged)
+
     {
       title: "⭐ My Subject Stars",
       body: `
@@ -883,7 +885,7 @@ function makeSlides(){
       `
     },
 
-    // ✅ SLIDE 5 (unchanged)
+ 
     {
       title: "🖼️ Favorite Subject Images",
       body: `
@@ -900,8 +902,7 @@ function makeSlides(){
       `
     },
 
-    // ✅ SLIDE 6 (unchanged)
-    {
+        {
       title: "💬 Comments",
       body: `
         <div class="bigCard">
