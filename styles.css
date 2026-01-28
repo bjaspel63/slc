@@ -24,6 +24,7 @@ body{
   font-family: ui-rounded, "Comic Sans MS", "Trebuchet MS", system-ui, -apple-system, Segoe UI, Arial;
   color:var(--ink);
 
+  /* ✅ Option D background (stronger, fun) */
   background:
     radial-gradient(900px 520px at 15% 15%, rgba(108,99,255,.22), transparent 60%),
     radial-gradient(900px 520px at 85% 25%, rgba(0,194,255,.22), transparent 60%),
@@ -456,9 +457,14 @@ textarea{
 .presentOverlay{
   position: fixed;
   inset: 0;
-  background: radial-gradient(1200px 600px at 10% 10%, var(--bg1), transparent 60%),
-              radial-gradient(1200px 600px at 90% 20%, var(--bg2), transparent 60%),
-              linear-gradient(180deg, #fff, #f7fbff);
+
+  /* ✅ match Option D vibe in present mode too */
+  background:
+    radial-gradient(900px 520px at 15% 15%, rgba(108,99,255,.22), transparent 60%),
+    radial-gradient(900px 520px at 85% 25%, rgba(0,194,255,.22), transparent 60%),
+    radial-gradient(900px 520px at 40% 90%, rgba(20,184,166,.18), transparent 60%),
+    linear-gradient(180deg, #fff, #f7fbff);
+
   z-index: 9999;
   display:none;
   padding: 16px;
@@ -618,7 +624,7 @@ textarea{
   padding: 10px 12px;
   border-radius: 16px;
   background: rgba(0,194,255,.12);
-  border: 1px dashed rgba(0,194,255,.45);
+  border: 1px dashed rgba(0,194,255,.45IPMSES);
   font-weight: 1000;
 }
 .chip.good{ background: rgba(20,184,166,.12); border-color: rgba(20,184,166,.45); }
@@ -666,13 +672,11 @@ body.teacherMode #btnReset{
 
 /* ==========================
    NEW: CAMERA MODAL (Webcam)
-   IDs used by JS:
-   #camOverlay #camPanel #camVideo #camCanvas #camClose #camCancel #camSnap
 ========================== */
 .camOverlay{
   position: fixed;
   inset: 0;
-  display:none;          /* JS sets to flex */
+  display:none;
   align-items:center;
   justify-content:center;
   padding: 16px;
@@ -733,7 +737,6 @@ body.teacherMode #btnReset{
   flex-wrap:wrap;
 }
 
-/* hide canvas (still used for capture) */
 #camCanvas{ display:none; }
 
 /* ===== Kid-friendly quick actions ===== */
@@ -802,6 +805,23 @@ body.teacherMode #btnReset{
   transform: translateX(-50%) translateY(-4px);
 }
 
+/* ✅ Fix Chrome autofill yellow background */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus{
+  -webkit-text-fill-color: var(--ink) !important;
+  caret-color: var(--ink) !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(255,255,255,.97) inset !important;
+  box-shadow: 0 0 0 1000px rgba(255,255,255,.97) inset !important;
+  border-radius: 16px !important;
+  transition: background-color 9999s ease-in-out 0s;
+}
 
 /* Print */
 @media print{
