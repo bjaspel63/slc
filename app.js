@@ -3,6 +3,15 @@ const SUBJECTS_COCORE = ["Drama","Art","ICT","Social Studies","Music","PE"];
 
 const $ = (id) => document.getElementById(id);
 
+function showToast(msg){
+  const el = $("toast");
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=> el.classList.remove("show"), 1300);
+}
+
 function toBase64(file){
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -158,12 +167,17 @@ function buildStarRow(subject, groupKey){
     b.textContent = "⭐";
     b.title = `${i} star${i>1?"s":""}`;
     b.addEventListener("click", () => {
-      state.ratings[key] = i;
-      [...starBar.children].forEach((child, idx) => {
-        child.classList.toggle("on", idx < i);
-      });
-      saveState();
-    });
+  const currentNow = Number(state.ratings[key] || 0);
+  const next = (currentNow === i) ? 0 : i; // tap same star again = clear
+  state.ratings[key] = next;
+
+  [...starBar.children].forEach((child, idx) => {
+    child.classList.toggle("on", idx < next);
+  });
+
+  saveState();
+});
+
     starBar.appendChild(b);
   }
 
@@ -417,6 +431,16 @@ function applyStateToUI(){
    Bind Inputs
 --------------------------- */
 function bindInputs(){
+
+  // Big Present button (kid-friendly)
+const big = $("btnPresentBig");
+if(big){
+  big.addEventListener("click", () => {
+    closeMenu();
+    openPresent();
+  });
+}
+
   // Student
   $("studentName").value = state.studentName;
   $("studentName").addEventListener("input", e => {
@@ -466,6 +490,34 @@ function bindInputs(){
   });
   $("favActivity").addEventListener("input", e => { state.favActivity = e.target.value; saveState(); });
   $("favExplanation").addEventListener("input", e => { state.favExplanation = e.target.value; saveState(); });
+
+  // Activity chips (tap to fill activity)
+const chipWrap = $("activityChips");
+if(chipWrap){
+  const chips = [...chipWrap.querySelectorAll(".pickChip")];
+
+  function syncChips(){
+    const v = (state.favActivity || "").trim().toLowerCase();
+    chips.forEach(btn=>{
+      const val = (btn.dataset.value || "").trim().toLowerCase();
+      btn.classList.toggle("on", v && val === v);
+    });
+  }
+
+  chips.forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      state.favActivity = btn.dataset.value || "";
+      $("favActivity").value = state.favActivity;
+      saveState();
+      syncChips();
+      showToast("✅ Activity selected!");
+    });
+  });
+
+  $("favActivity").addEventListener("input", ()=> syncChips());
+  syncChips();
+}
+
 
   // Challenges
   $("challenge1").value = state.challenge1;
