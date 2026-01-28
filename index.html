@@ -53,10 +53,10 @@
           <div class="photoFields">
             <label for="studentName">Student Name</label>
             <input id="studentName" type="text" placeholder="Type your name..." />
-            
+
             <label for="studentSection">Section / Class</label>
             <input id="studentSection" list="sectionList" type="text" placeholder="Choose or type..." />
-            
+
             <datalist id="sectionList">
               <option value="P1 - Joy"></option>
               <option value="P1 - Love"></option>
@@ -67,9 +67,7 @@
               <option value="P3 - Joy"></option>
               <option value="P3 - Love"></option>
               <option value="P3 - Peace"></option>
-      
             </datalist>
-
 
             <label>Student Photo</label>
             <div class="fileRow">
@@ -77,8 +75,12 @@
               <button class="btnSmall" id="btnStudentCam" type="button" title="Use camera">📷 Camera</button>
             </div>
 
+            <!-- (Optional) keep as fallback for mobile devices -->
             <input id="studentPhotoCam" type="file" accept="image/*" capture="user" style="display:none" />
-            <div class="sectionNote">Tip: You can upload OR use the camera (if your device supports it).</div>
+
+            <div class="sectionNote">
+              Tip: On Chromebooks, the Camera button uses the webcam (not the file picker). On phones, you can also use the camera upload.
+            </div>
           </div>
         </div>
 
@@ -207,6 +209,8 @@
               <input id="imgCore" type="file" accept="image/*" />
               <button class="btnSmall" id="btnCoreCam" type="button">📷 Camera</button>
             </div>
+
+            <!-- (Optional) keep as fallback for mobile devices -->
             <input id="imgCoreCam" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
 
@@ -220,6 +224,8 @@
               <input id="imgCoCore" type="file" accept="image/*" />
               <button class="btnSmall" id="btnCoCoreCam" type="button">📷 Camera</button>
             </div>
+
+            <!-- (Optional) keep as fallback for mobile devices -->
             <input id="imgCoCoreCam" type="file" accept="image/*" capture="environment" style="display:none" />
           </div>
         </div>
@@ -235,7 +241,30 @@
     </div>
   </div>
 
-  <!-- PRESENT MODE OVERLAY (✅ removed Share button inside) -->
+  <!-- ✅ CAMERA MODAL (Chromebook webcam) -->
+  <div id="camOverlay" class="camOverlay" aria-hidden="true" style="display:none;">
+    <div class="camPanel">
+      <div class="camTop">
+        <div style="font-weight:1000;">📷 Camera</div>
+        <button id="camClose" class="btnSmall" type="button" title="Close">✖</button>
+      </div>
+
+      <video id="camVideo" autoplay playsinline></video>
+
+      <canvas id="camCanvas" style="display:none;"></canvas>
+
+      <div class="camActions">
+        <button id="camCancel" class="btn btnGhost" type="button">Cancel</button>
+        <button id="camSnap" class="btn btnPrimary" type="button">📸 Take Photo</button>
+      </div>
+
+      <div class="sectionNote" style="margin-top:10px;">
+        If you don’t see the camera, allow permission (🔒 lock icon → Camera → Allow). Use HTTPS (Netlify) or localhost.
+      </div>
+    </div>
+  </div>
+
+  <!-- PRESENT MODE OVERLAY -->
   <div class="presentOverlay" id="presentOverlay" aria-hidden="true">
     <div class="presentWrap">
       <div class="presentTop">
